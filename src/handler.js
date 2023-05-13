@@ -2,19 +2,18 @@ const { nanoid } = require('nanoid');
 const books = require('./books');
 
 const addBookHandler = (request, h) => {
-  const {
-    name,
-    year,
-    author,
-    summary,
-    publisher,
-    pageCount,
-    readPage,
-    reading,
-  } = request.payload;
+  const { name, year, author, summary, publisher, pageCount, readPage, reading } = request.payload;
 
   const id = nanoid(16);
-  const insertedAt = new Date().toISOString();
+  const insertedAt = new Date().toLocaleString('id-ID', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    second: 'numeric',
+    hour12: false,
+  });
   const updatedAt = insertedAt;
   const finished = pageCount === readPage;
 
@@ -66,8 +65,7 @@ const getAllBookshandler = (request, h) => {
   if (books.length > 0) {
     let filteredBooks = books;
     if (name) {
-      filteredBooks = filteredBooks.filter((book) => book.name
-        .toLowerCase().includes(name.toLowerCase()));
+      filteredBooks = filteredBooks.filter((book) => book.name.toLowerCase().includes(name.toLowerCase()));
     }
     if (reading) {
       filteredBooks = filteredBooks.filter((book) => book.reading === Boolean(Number(reading)));
@@ -123,10 +121,16 @@ const getAllBooksByIdhandler = (request, h) => {
 const updateBookByIdHandler = (request, h) => {
   const { id } = request.params;
   const isFound = books.filter((item) => item.id === id)[0];
-  const {
-    name, year, author, summary, publisher, pageCount, readPage, reading,
-  } = request.payload;
-  const updatedAt = new Date().toISOString();
+  const { name, year, author, summary, publisher, pageCount, readPage, reading } = request.payload;
+  const updatedAt = new Date().toLocaleString('id-ID', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    second: 'numeric',
+    hour12: false,
+  });
   const finished = pageCount === readPage;
 
   const index = books.findIndex((book) => book.id === id);
